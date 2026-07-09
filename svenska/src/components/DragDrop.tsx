@@ -6,10 +6,17 @@ interface Props {
   onComplete: (score: number) => void
 }
 
+const ZONE_STYLES = [
+  { border: '#8B5CF6', bg: '#F5F3FF', icon: '#8B5CF6' },
+  { border: '#0EA5E9', bg: '#F0F9FF', icon: '#0EA5E9' },
+  { border: '#10B981', bg: '#F0FDF4', icon: '#10B981' },
+]
+
 export function DragDrop({ scenes, onComplete }: Props) {
   const [current, setCurrent] = useState(0)
   const [dragOver, setDragOver] = useState<string | null>(null)
   const [result, setResult] = useState<'correct' | 'wrong' | null>(null)
+  const [tapped, setTapped] = useState<string | null>(null)
   const [score, setScore] = useState(0)
   const [done, setDone] = useState(false)
 
@@ -22,9 +29,14 @@ export function DragDrop({ scenes, onComplete }: Props) {
   const handleDrop = (e: React.DragEvent, zoneId: string) => {
     e.preventDefault()
     setDragOver(null)
+    selectZone(zoneId)
+  }
+
+  const selectZone = (zoneId: string) => {
+    if (result) return
+    setTapped(zoneId)
     const zone = scene.zones.find((z) => z.id === zoneId)
-    if (!zone) return
-    setResult(zone.correct ? 'correct' : 'wrong')
+    setResult(zone?.correct ? 'correct' : 'wrong')
   }
 
   const handleNext = () => {
@@ -36,114 +48,191 @@ export function DragDrop({ scenes, onComplete }: Props) {
       setScore(newScore)
       setCurrent(current + 1)
       setResult(null)
+      setTapped(null)
     }
-  }
-
-  // Touch-based tap selection for kids on tablets
-  const [tapped, setTapped] = useState<string | null>(null)
-
-  const handleZoneTap = (zoneId: string) => {
-    if (result) return
-    setTapped(zoneId)
-    const zone = scene.zones.find((z) => z.id === zoneId)
-    if (!zone) return
-    setResult(zone.correct ? 'correct' : 'wrong')
   }
 
   if (done) {
     const finalScore = result === 'correct' ? score + 1 : score
     const pct = Math.round((finalScore / scenes.length) * 100)
     return (
-      <div className="flex flex-col items-center gap-6 py-8" data-testid="drag-result">
-        <div className="text-8xl">{pct >= 80 ? '🏆' : '⭐'}</div>
-        <div className="text-4xl font-black text-purple-700">
-          {finalScore} / {scenes.length}
+      <div data-testid="drag-result" style={{ textAlign: 'center', padding: '20px 0' }}>
+        <div style={{ fontSize: 96, lineHeight: 1, marginBottom: 12 }}>{pct >= 80 ? '🏆' : '⭐'}</div>
+        <div style={{
+          fontFamily: "'Baloo 2', sans-serif",
+          fontWeight: 900, fontSize: 52, color: '#10B981', lineHeight: 1,
+        }}>
+          {finalScore}<span style={{ fontSize: 28, color: '#9CA3AF' }}>/{scenes.length}</span>
         </div>
-        <div className="text-2xl font-bold text-gray-600">
-          {pct >= 80 ? 'Superstar! 🌟' : 'Great effort! 💪'}
+        <div style={{ fontWeight: 700, fontSize: 20, color: '#374151', marginTop: 8 }}>
+          {pct >= 80 ? 'Superstar! 🌟' : 'Great effort! Keep going! 💪'}
         </div>
       </div>
     )
   }
 
+  const progress = (current / scenes.length) * 100
+
   return (
-    <div className="flex flex-col items-center gap-5" data-testid="drag-drop">
-      <div className="text-sm font-bold text-blue-500">
-        Scene {current + 1} of {scenes.length}
-      </div>
-
-      {/* Instruction */}
-      <div className="bg-blue-100 rounded-2xl px-6 py-3 text-center">
-        <div className="text-xl font-black text-blue-800">{scene.instruction}</div>
-        <div className="text-lg font-bold text-blue-600">{scene.instructionSwedish}</div>
-      </div>
-
-      {/* Draggable subject */}
-      <div className="flex flex-col items-center gap-2">
-        <div className="text-sm font-bold text-gray-500">Drag or tap below:</div>
-        <div
-          draggable
-          onDragStart={handleDragStart}
-          className="text-8xl cursor-grab active:cursor-grabbing select-none"
-          data-testid="drag-subject"
-        >
-          {scene.subjectEmoji}
+    <div data-testid="drag-drop" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+      {/* Progress */}
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+          <span style={{ fontWeight: 800, fontSize: 13, color: '#6B7280' }}>Scene {current + 1} of {scenes.length}</span>
+          <span style={{ fontWeight: 800, fontSize: 13, color: '#6B7280' }}>Score: {score} ⭐</span>
+        </div>
+        <div style={{ height: 10, background: '#D1FAE5', borderRadius: 999, overflow: 'hidden' }}>
+          <div style={{
+            width: `${progress}%`, height: '100%',
+            background: 'linear-gradient(90deg, #10B981, #06B6D4)',
+            borderRadius: 999, transition: 'width 0.5s ease',
+          }} />
         </div>
       </div>
 
-      {/* Drop zones */}
-      <div className="flex gap-4 flex-wrap justify-center">
-        {scene.zones.map((zone) => {
-          let borderColor = 'border-gray-300'
-          let bg = 'bg-white'
-          if (dragOver === zone.id) {
-            borderColor = 'border-blue-500'
-            bg = 'bg-blue-50'
-          }
-          if (result) {
-            if (zone.correct) {
-              borderColor = 'border-green-500'
-              bg = 'bg-green-50'
-            } else if (tapped === zone.id && !zone.correct) {
-              borderColor = 'border-red-500'
-              bg = 'bg-red-50'
+      {/* Instruction banner */}
+      <div style={{
+        background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+        borderRadius: 20, padding: '16px 20px', textAlign: 'center',
+        boxShadow: '0 6px 20px rgba(16,185,129,0.35)',
+        position: 'relative', overflow: 'hidden',
+      }}>
+        <div style={{ position: 'absolute', top: -15, right: -15, width: 70, height: 70, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} />
+        <div style={{
+          fontFamily: "'Baloo 2', sans-serif",
+          fontWeight: 900, fontSize: 22, color: 'white', lineHeight: 1.2,
+          textShadow: '0 2px 6px rgba(0,0,0,0.15)',
+        }}>
+          {scene.instruction}
+        </div>
+        <div style={{ fontWeight: 700, fontSize: 15, color: 'rgba(255,255,255,0.85)', marginTop: 4 }}>
+          {scene.instructionSwedish}
+        </div>
+      </div>
+
+      {/* Main scene */}
+      <div style={{
+        background: 'white', borderRadius: 24,
+        boxShadow: '0 6px 28px rgba(0,0,0,0.08)',
+        padding: '24px 16px',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20,
+      }}>
+        {/* Draggable subject */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 8 }}>
+            Tap or drag me!
+          </div>
+          <div
+            draggable
+            onDragStart={handleDragStart}
+            data-testid="drag-subject"
+            style={{
+              fontSize: 80, lineHeight: 1, cursor: 'grab',
+              filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.2))',
+              display: 'inline-block',
+              transition: 'transform 0.2s',
+            }}
+          >
+            {scene.subjectEmoji}
+          </div>
+        </div>
+
+        {/* Arrow */}
+        <div style={{ fontSize: 28, color: '#CBD5E1' }}>↓</div>
+
+        {/* Drop zones */}
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', width: '100%' }}>
+          {scene.zones.map((zone, i) => {
+            const style = ZONE_STYLES[i % 3]
+            let borderColor = style.border
+            let bg = style.bg
+            let extraShadow = 'none'
+            let showEmoji = ''
+
+            if (result) {
+              if (zone.correct) {
+                borderColor = '#10B981'; bg = '#D1FAE5'
+                extraShadow = '0 0 0 4px rgba(16,185,129,0.25)'
+                showEmoji = '✅'
+              } else if (tapped === zone.id) {
+                borderColor = '#EF4444'; bg = '#FEE2E2'
+                extraShadow = '0 0 0 4px rgba(239,68,68,0.2)'
+                showEmoji = '❌'
+              }
             }
-          }
 
-          return (
-            <div
-              key={zone.id}
-              data-testid={`drop-zone-${zone.id}`}
-              onClick={() => handleZoneTap(zone.id)}
-              onDragOver={(e) => { e.preventDefault(); setDragOver(zone.id) }}
-              onDragLeave={() => setDragOver(null)}
-              onDrop={(e) => handleDrop(e, zone.id)}
-              className={`w-28 h-28 rounded-2xl border-4 ${borderColor} ${bg} flex flex-col items-center justify-center gap-1 cursor-pointer transition-all hover:scale-105 select-none`}
-            >
-              <div className="text-4xl">{zone.emoji}</div>
-              <div className="text-xs font-bold text-gray-600">{zone.label}</div>
-              {result && zone.correct && <div className="text-xl">✅</div>}
-            </div>
-          )
-        })}
+            return (
+              <div
+                key={zone.id}
+                data-testid={`drop-zone-${zone.id}`}
+                onClick={() => selectZone(zone.id)}
+                onDragOver={(e) => { e.preventDefault(); setDragOver(zone.id) }}
+                onDragLeave={() => setDragOver(null)}
+                onDrop={(e) => handleDrop(e, zone.id)}
+                className={dragOver === zone.id && !result ? 'zone-hover' : ''}
+                style={{
+                  flex: 1, minWidth: 0,
+                  border: `3px solid ${dragOver === zone.id && !result ? '#6366F1' : borderColor}`,
+                  background: dragOver === zone.id && !result ? '#EEF2FF' : bg,
+                  borderRadius: 18,
+                  padding: '14px 6px',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                  cursor: result ? 'default' : 'pointer',
+                  boxShadow: extraShadow,
+                  transition: 'all 0.2s ease',
+                  transform: dragOver === zone.id && !result ? 'scale(1.04)' : 'scale(1)',
+                }}
+              >
+                <div style={{ fontSize: 32 }}>{zone.emoji}</div>
+                <div style={{
+                  fontFamily: "'Baloo 2', sans-serif",
+                  fontWeight: 800, fontSize: 11, color: borderColor, textAlign: 'center', lineHeight: 1.2,
+                  textTransform: 'uppercase', letterSpacing: 0.5,
+                }}>
+                  {zone.label}
+                </div>
+                {showEmoji && <div style={{ fontSize: 20 }}>{showEmoji}</div>}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Target */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 70, lineHeight: 1, filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.15))' }}>
+            {scene.targetEmoji}
+          </div>
+          <div style={{ fontWeight: 700, fontSize: 13, color: '#9CA3AF', marginTop: 4 }}>
+            {scene.targetLabel}
+          </div>
+        </div>
       </div>
 
-      {/* Target */}
-      <div className="flex flex-col items-center gap-1">
-        <div className="text-5xl">{scene.targetEmoji}</div>
-        <div className="text-sm font-bold text-gray-500">{scene.targetLabel}</div>
-      </div>
-
-      {/* Feedback */}
+      {/* Feedback + Next */}
       {result && (
-        <div className="flex flex-col items-center gap-3">
-          <div className={`text-2xl font-bold ${result === 'correct' ? 'text-green-600' : 'text-red-600'}`}>
-            {result === 'correct' ? '🎉 Perfekt!' : `❌ Try again! "${scene.preposition}" = ${scene.instruction.split(' ').slice(2).join(' ')}`}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+          <div style={{
+            background: result === 'correct' ? '#D1FAE5' : '#FEE2E2',
+            border: `2px solid ${result === 'correct' ? '#6EE7B7' : '#FECACA'}`,
+            borderRadius: 16, padding: '12px 24px',
+            fontWeight: 800, fontSize: 18,
+            color: result === 'correct' ? '#065F46' : '#991B1B',
+            textAlign: 'center',
+          }}>
+            {result === 'correct'
+              ? '🎉 Perfekt! Well done!'
+              : `❌ "${scene.preposition}" means ${scene.instruction.toLowerCase().replace('put the ', '').replace('the ', '').split(' ').slice(1).join(' ')}`}
           </div>
           <button
             onClick={handleNext}
-            className="px-8 py-3 bg-blue-600 text-white rounded-full text-xl font-bold hover:bg-blue-700 transition-colors"
             data-testid="drag-next"
+            style={{
+              background: 'linear-gradient(135deg, #10B981 0%, #06B6D4 100%)',
+              border: 'none', borderRadius: 999, padding: '14px 40px',
+              color: 'white', fontFamily: "'Baloo 2', sans-serif",
+              fontWeight: 800, fontSize: 18, cursor: 'pointer',
+              boxShadow: '0 6px 20px rgba(16,185,129,0.4)',
+            }}
           >
             {current + 1 >= scenes.length ? 'Finish! 🏆' : 'Next Scene ▶'}
           </button>

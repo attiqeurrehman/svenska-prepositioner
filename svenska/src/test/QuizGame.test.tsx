@@ -31,13 +31,13 @@ describe('QuizGame', () => {
     expect(screen.getByTestId('quiz-option-på')).toBeInTheDocument()
   })
 
-  it('shows correct feedback on right answer', () => {
+  it('shows positive feedback on correct answer', () => {
     render(<QuizGame questions={questions} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByTestId('quiz-option-på'))
-    expect(screen.getByText(/Correct/)).toBeInTheDocument()
+    expect(screen.getByText(/Perfekt/)).toBeInTheDocument()
   })
 
-  it('shows wrong feedback on wrong answer', () => {
+  it('shows the correct answer when wrong option selected', () => {
     render(<QuizGame questions={questions} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByTestId('quiz-option-under'))
     expect(screen.getByText(/It was/)).toBeInTheDocument()

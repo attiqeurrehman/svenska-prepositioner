@@ -15,35 +15,31 @@ const defaultProps = {
 }
 
 describe('Flashcard', () => {
-  it('shows the Swedish word on front face', () => {
+  it('renders the flashcard component', () => {
     render(<Flashcard {...defaultProps} />)
-    expect(screen.getByText('på')).toBeInTheDocument()
+    expect(screen.getByTestId('flashcard')).toBeInTheDocument()
   })
 
-  it('shows card counter', () => {
+  it('shows the Swedish word on the front face', () => {
     render(<Flashcard {...defaultProps} />)
-    expect(screen.getByText('Card 1 of 8')).toBeInTheDocument()
+    expect(screen.getByTestId('flashcard-card')).toHaveTextContent('på')
+  })
+
+  it('shows 1/8 counter', () => {
+    render(<Flashcard {...defaultProps} />)
+    expect(screen.getByText('1 / 8')).toBeInTheDocument()
   })
 
   it('flips to show English meaning on click', () => {
     render(<Flashcard {...defaultProps} />)
     const card = screen.getByTestId('flashcard-card')
     fireEvent.click(card)
-    expect(screen.getByText('ON')).toBeInTheDocument()
+    expect(card).toHaveTextContent('ON')
   })
 
-  it('calls onNext when Next button clicked', () => {
-    const onNext = vi.fn()
-    render(<Flashcard {...defaultProps} onNext={onNext} />)
-    fireEvent.click(screen.getByTestId('flashcard-next'))
-    // onNext is called after a timeout — we check it was initiated
-    expect(onNext).toHaveBeenCalledTimes(0) // called after setTimeout
-  })
-
-  it('calls onPrev when Prev button clicked', () => {
-    const onPrev = vi.fn()
-    render(<Flashcard {...defaultProps} onPrev={onPrev} />)
-    fireEvent.click(screen.getByTestId('flashcard-prev'))
-    expect(onPrev).toHaveBeenCalledTimes(0) // called after setTimeout
+  it('renders prev and next nav buttons', () => {
+    render(<Flashcard {...defaultProps} />)
+    expect(screen.getByTestId('flashcard-next')).toBeInTheDocument()
+    expect(screen.getByTestId('flashcard-prev')).toBeInTheDocument()
   })
 })

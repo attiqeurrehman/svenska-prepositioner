@@ -13,9 +13,9 @@ const scenes: DragScene[] = [
     targetLabel: 'table',
     targetEmoji: '🪑',
     zones: [
-      { id: 'on', label: 'On top', emoji: '⬆️', correct: true },
-      { id: 'under', label: 'Under', emoji: '⬇️', correct: false },
-      { id: 'beside', label: 'Beside', emoji: '↔️', correct: false },
+      { id: 'on', label: 'On top', emoji: '🙋', correct: true },
+      { id: 'under', label: 'Under', emoji: '🐢', correct: false },
+      { id: 'beside', label: 'Beside', emoji: '🤝', correct: false },
     ],
   },
   {
@@ -27,9 +27,9 @@ const scenes: DragScene[] = [
     targetLabel: 'bed',
     targetEmoji: '🛏️',
     zones: [
-      { id: 'on', label: 'On top', emoji: '⬆️', correct: false },
-      { id: 'under', label: 'Under', emoji: '⬇️', correct: true },
-      { id: 'beside', label: 'Beside', emoji: '↔️', correct: false },
+      { id: 'on', label: 'On top', emoji: '🙋', correct: false },
+      { id: 'under', label: 'Under', emoji: '🐢', correct: true },
+      { id: 'beside', label: 'Beside', emoji: '🤝', correct: false },
     ],
   },
 ]
@@ -52,16 +52,16 @@ describe('DragDrop', () => {
     expect(screen.getByTestId('drop-zone-beside')).toBeInTheDocument()
   })
 
-  it('shows correct feedback when correct zone tapped', () => {
+  it('shows positive feedback when correct zone tapped', () => {
     render(<DragDrop scenes={scenes} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByTestId('drop-zone-on'))
     expect(screen.getByText(/Perfekt/)).toBeInTheDocument()
   })
 
-  it('shows wrong feedback when wrong zone tapped', () => {
+  it('shows error feedback when wrong zone tapped', () => {
     render(<DragDrop scenes={scenes} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByTestId('drop-zone-under'))
-    expect(screen.getByText(/Try again/)).toBeInTheDocument()
+    expect(screen.getByText(/på/)).toBeInTheDocument()
   })
 
   it('advances to next scene', () => {

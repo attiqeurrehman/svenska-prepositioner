@@ -18,14 +18,14 @@ export interface Scene {
 }
 
 export const PREPOSITIONS: Preposition[] = [
-  { swedish: 'på', english: 'on', emoji: '⬆️', color: '#FF6B6B' },
-  { swedish: 'under', english: 'under', emoji: '⬇️', color: '#4ECDC4' },
-  { swedish: 'i', english: 'in', emoji: '📦', color: '#45B7D1' },
-  { swedish: 'bakom', english: 'behind', emoji: '👁️', color: '#96CEB4' },
-  { swedish: 'framför', english: 'in front of', emoji: '🚶', color: '#FFEAA7' },
-  { swedish: 'bredvid', english: 'next to', emoji: '↔️', color: '#DDA0DD' },
-  { swedish: 'över', english: 'above', emoji: '☝️', color: '#F0E68C' },
-  { swedish: 'mellan', english: 'between', emoji: '🔀', color: '#98FB98' },
+  { swedish: 'på', english: 'on', emoji: '🐱', color: '#DC2626' },
+  { swedish: 'under', english: 'under', emoji: '🐢', color: '#2563EB' },
+  { swedish: 'i', english: 'in', emoji: '🎁', color: '#059669' },
+  { swedish: 'bakom', english: 'behind', emoji: '🙈', color: '#7C3AED' },
+  { swedish: 'framför', english: 'in front of', emoji: '🦁', color: '#D97706' },
+  { swedish: 'bredvid', english: 'next to', emoji: '🤝', color: '#DB2777' },
+  { swedish: 'över', english: 'above', emoji: '🦅', color: '#0284C7' },
+  { swedish: 'mellan', english: 'between', emoji: '🥪', color: '#16A34A' },
 ]
 
 export interface QuizQuestion {
@@ -134,9 +134,9 @@ export const DRAG_SCENES: DragScene[] = [
     targetLabel: 'table',
     targetEmoji: '🪑',
     zones: [
-      { id: 'on', label: 'On top', emoji: '⬆️', correct: true },
-      { id: 'under', label: 'Under', emoji: '⬇️', correct: false },
-      { id: 'beside', label: 'Beside', emoji: '↔️', correct: false },
+      { id: 'on', label: 'On top', emoji: '🙋', correct: true },
+      { id: 'under', label: 'Under', emoji: '🐢', correct: false },
+      { id: 'beside', label: 'Beside', emoji: '🤝', correct: false },
     ],
   },
   {
@@ -148,9 +148,9 @@ export const DRAG_SCENES: DragScene[] = [
     targetLabel: 'bed',
     targetEmoji: '🛏️',
     zones: [
-      { id: 'on', label: 'On top', emoji: '⬆️', correct: false },
-      { id: 'under', label: 'Under', emoji: '⬇️', correct: true },
-      { id: 'beside', label: 'Beside', emoji: '↔️', correct: false },
+      { id: 'on', label: 'On top', emoji: '🙋', correct: false },
+      { id: 'under', label: 'Under', emoji: '🐢', correct: true },
+      { id: 'beside', label: 'Beside', emoji: '🤝', correct: false },
     ],
   },
   {
@@ -162,9 +162,9 @@ export const DRAG_SCENES: DragScene[] = [
     targetLabel: 'basket',
     targetEmoji: '🧺',
     zones: [
-      { id: 'on', label: 'On top', emoji: '⬆️', correct: false },
-      { id: 'inside', label: 'Inside', emoji: '📦', correct: true },
-      { id: 'beside', label: 'Beside', emoji: '↔️', correct: false },
+      { id: 'on', label: 'On top', emoji: '🙋', correct: false },
+      { id: 'inside', label: 'Inside', emoji: '🎁', correct: true },
+      { id: 'beside', label: 'Beside', emoji: '🤝', correct: false },
     ],
   },
   {
@@ -176,9 +176,9 @@ export const DRAG_SCENES: DragScene[] = [
     targetLabel: 'house',
     targetEmoji: '🏠',
     zones: [
-      { id: 'above', label: 'Above', emoji: '☝️', correct: true },
-      { id: 'under', label: 'Under', emoji: '⬇️', correct: false },
-      { id: 'beside', label: 'Beside', emoji: '↔️', correct: false },
+      { id: 'above', label: 'Above', emoji: '🦅', correct: true },
+      { id: 'under', label: 'Under', emoji: '🐢', correct: false },
+      { id: 'beside', label: 'Beside', emoji: '🤝', correct: false },
     ],
   },
   {
@@ -190,9 +190,9 @@ export const DRAG_SCENES: DragScene[] = [
     targetLabel: 'tree',
     targetEmoji: '🌳',
     zones: [
-      { id: 'on', label: 'On top', emoji: '⬆️', correct: false },
-      { id: 'under', label: 'Under', emoji: '⬇️', correct: false },
-      { id: 'beside', label: 'Next to', emoji: '↔️', correct: true },
+      { id: 'on', label: 'On top', emoji: '🙋', correct: false },
+      { id: 'under', label: 'Under', emoji: '🐢', correct: false },
+      { id: 'beside', label: 'Next to', emoji: '🤝', correct: true },
     ],
   },
 ]

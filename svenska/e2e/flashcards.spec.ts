@@ -10,21 +10,19 @@ test.describe('Flashcards', () => {
     await expect(page.getByTestId('flashcards-section')).toBeVisible()
   })
 
-  test('shows first card with Swedish word and counter', async ({ page }) => {
+  test('shows first card with counter 1/8', async ({ page }) => {
     await expect(page.getByTestId('flashcard')).toBeVisible()
-    await expect(page.getByText('Card 1 of 8')).toBeVisible()
+    await expect(page.getByText('1 / 8')).toBeVisible()
   })
 
-  test('flips card on click to show English', async ({ page }) => {
+  test('flips card on click to show English meaning', async ({ page }) => {
     await page.getByTestId('flashcard-card').click()
-    // The back face has the uppercased English translation
-    const card = page.getByTestId('flashcard-card')
-    await expect(card).toContainText('ON')
+    await expect(page.getByTestId('flashcard-card')).toContainText('ON')
   })
 
   test('navigates to next card', async ({ page }) => {
     await page.getByTestId('flashcard-next').click()
-    await expect(page.getByText('Card 2 of 8')).toBeVisible()
+    await expect(page.getByText('2 / 8')).toBeVisible()
   })
 
   test('back button returns to home', async ({ page }) => {

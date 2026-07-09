@@ -15,9 +15,10 @@ test.describe('Drag & Drop', () => {
     await expect(page.getByText(/Perfekt/)).toBeVisible()
   })
 
-  test('tapping wrong zone shows Try again', async ({ page }) => {
+  test('tapping wrong zone shows the correct preposition', async ({ page }) => {
     await page.getByTestId('drop-zone-under').click()
-    await expect(page.getByText(/Try again/)).toBeVisible()
+    // feedback shows the correct preposition in quotes
+    await expect(page.getByText(/på/)).toBeVisible()
   })
 
   test('advances to scene 2 after clicking next', async ({ page }) => {

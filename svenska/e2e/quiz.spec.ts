@@ -10,12 +10,12 @@ test.describe('Quiz Game', () => {
     await expect(page.getByText('Question 1 of 8')).toBeVisible()
   })
 
-  test('selecting correct answer shows green feedback', async ({ page }) => {
+  test('selecting correct answer shows positive feedback', async ({ page }) => {
     await page.getByTestId('quiz-option-på').click()
-    await expect(page.getByText(/Correct/)).toBeVisible()
+    await expect(page.getByText(/Perfekt/)).toBeVisible()
   })
 
-  test('selecting wrong answer shows red feedback', async ({ page }) => {
+  test('selecting wrong answer reveals correct answer', async ({ page }) => {
     await page.getByTestId('quiz-option-under').click()
     await expect(page.getByText(/It was/)).toBeVisible()
   })
@@ -27,14 +27,12 @@ test.describe('Quiz Game', () => {
   })
 
   test('shows star rating on home after completing quiz', async ({ page }) => {
-    // answer all 8 questions
     const answers = ['på', 'under', 'i', 'över', 'bredvid', 'bakom', 'framför', 'mellan']
     for (const answer of answers) {
       const btn = page.getByTestId(`quiz-option-${answer}`)
       if (await btn.isVisible()) {
         await btn.click()
       } else {
-        // pick first option if correct not visible
         await page.locator('[data-testid^="quiz-option-"]').first().click()
       }
       const nextBtn = page.getByTestId('quiz-next')
