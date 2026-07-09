@@ -75,8 +75,8 @@ export function QuizGame({ questions, onComplete }: Props) {
       {/* Progress bar */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-          <span style={{ fontWeight: 800, fontSize: 13, color: '#6B7280' }}>Question {current + 1} of {questions.length}</span>
-          <span style={{ fontWeight: 800, fontSize: 13, color: '#6B7280' }}>Score: {score} ⭐</span>
+          <span style={{ fontWeight: 800, fontSize: 13, color: '#6B7280' }}>Fråga / Question {current + 1} / {questions.length}</span>
+          <span style={{ fontWeight: 800, fontSize: 13, color: '#6B7280' }}>Poäng / Score: {score} ⭐</span>
         </div>
         <div style={{ height: 10, background: '#E0E7FF', borderRadius: 999, overflow: 'hidden' }}>
           <div style={{
@@ -95,7 +95,7 @@ export function QuizGame({ questions, onComplete }: Props) {
         border: '2px solid #F3F4F6',
       }}>
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12 }}>
-          Which word fits?
+          Vilket ord passar? / Which word fits?
         </div>
         {/* Spatial scene */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
@@ -117,8 +117,12 @@ export function QuizGame({ questions, onComplete }: Props) {
           marginTop: 14, fontWeight: 700, fontSize: 14,
           color: '#6B7280', lineHeight: 1.4,
           background: '#F9FAFB', borderRadius: 12, padding: '8px 16px',
+          textAlign: 'center',
         }}>
-          {question.prepositionDesc}
+          <div>🇬🇧 {question.prepositionDesc}</div>
+          <div style={{ fontWeight: 800, fontSize: 15, color: '#4B5563', marginTop: 3 }}>
+            🇸🇪 {question.sceneDescription}
+          </div>
         </div>
       </div>
 

@@ -97,7 +97,7 @@ export function Flashcard({ preposition, exampleSwedish, exampleEnglish, onNext,
               background: 'rgba(255,255,255,0.25)', borderRadius: 999,
               padding: '6px 18px', color: 'white', fontWeight: 700, fontSize: 13,
             }}>
-              Tap to flip 👆
+              Tryck för att vända / Tap to flip 👆
             </div>
           </div>
 
@@ -116,7 +116,7 @@ export function Flashcard({ preposition, exampleSwedish, exampleEnglish, onNext,
               fontWeight: 900, fontSize: 13, letterSpacing: 2,
               color: '#9CA3AF', textTransform: 'uppercase',
             }}>
-              In English
+              🇬🇧 På engelska / In English
             </div>
             <div style={{
               fontFamily: "'Baloo 2', sans-serif",
@@ -136,7 +136,7 @@ export function Flashcard({ preposition, exampleSwedish, exampleEnglish, onNext,
                 {exampleEnglish}
               </div>
             </div>
-            <div style={{ fontWeight: 600, fontSize: 12, color: '#9CA3AF' }}>Tap to flip back 🔄</div>
+            <div style={{ fontWeight: 600, fontSize: 12, color: '#9CA3AF' }}>Tryck för att vända / Tap to flip back 🔄</div>
           </div>
         </div>
       </div>

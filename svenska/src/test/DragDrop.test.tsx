@@ -6,16 +6,16 @@ import type { DragScene } from '../data/prepositions'
 const scenes: DragScene[] = [
   {
     id: 'd1',
-    instruction: 'Put the cat ON the table',
+    instruction: 'Put the cat ON the box',
     instructionSwedish: 'Sätt katten PÅ bordet',
     preposition: 'på',
     subjectEmoji: '🐱',
     targetLabel: 'table',
     targetEmoji: '🪑',
     zones: [
-      { id: 'on', label: 'On top', emoji: '🙋', correct: true },
-      { id: 'under', label: 'Under', emoji: '🐢', correct: false },
-      { id: 'beside', label: 'Beside', emoji: '🤝', correct: false },
+      { id: 'on', label: 'På / On top', emoji: 'on', correct: true },
+      { id: 'under', label: 'Under / Under', emoji: 'under', correct: false },
+      { id: 'beside', label: 'Bredvid / Beside', emoji: 'beside', correct: false },
     ],
   },
   {
@@ -24,12 +24,12 @@ const scenes: DragScene[] = [
     instructionSwedish: 'Sätt hunden UNDER sängen',
     preposition: 'under',
     subjectEmoji: '🐶',
-    targetLabel: 'bed',
+    targetLabel: 'sängen / bed',
     targetEmoji: '🛏️',
     zones: [
-      { id: 'on', label: 'On top', emoji: '🙋', correct: false },
-      { id: 'under', label: 'Under', emoji: '🐢', correct: true },
-      { id: 'beside', label: 'Beside', emoji: '🤝', correct: false },
+      { id: 'on', label: 'På / On top', emoji: 'on', correct: false },
+      { id: 'under', label: 'Under / Under', emoji: 'under', correct: true },
+      { id: 'beside', label: 'Bredvid / Beside', emoji: 'beside', correct: false },
     ],
   },
 ]
@@ -37,7 +37,7 @@ const scenes: DragScene[] = [
 describe('DragDrop', () => {
   it('renders scene instruction', () => {
     render(<DragDrop scenes={scenes} onComplete={vi.fn()} />)
-    expect(screen.getByText('Put the cat ON the table')).toBeInTheDocument()
+    expect(screen.getByText(/Put the cat ON the box/)).toBeInTheDocument()
   })
 
   it('shows the subject emoji', () => {
@@ -68,7 +68,7 @@ describe('DragDrop', () => {
     render(<DragDrop scenes={scenes} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByTestId('drop-zone-on'))
     fireEvent.click(screen.getByTestId('drag-next'))
-    expect(screen.getByText('Scene 2 of 2')).toBeInTheDocument()
+    expect(screen.getByText(/Scen 2/)).toBeInTheDocument()
   })
 
   it('calls onComplete after all scenes', () => {

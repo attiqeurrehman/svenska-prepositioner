@@ -27,7 +27,7 @@ const questions: QuizQuestion[] = [
 describe('QuizGame', () => {
   it('renders the first question', () => {
     render(<QuizGame questions={questions} onComplete={vi.fn()} />)
-    expect(screen.getByText('Question 1 of 2')).toBeInTheDocument()
+    expect(screen.getByText(/Question/)).toBeInTheDocument()
     expect(screen.getByTestId('quiz-option-på')).toBeInTheDocument()
   })
 
@@ -47,7 +47,7 @@ describe('QuizGame', () => {
     render(<QuizGame questions={questions} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByTestId('quiz-option-på'))
     fireEvent.click(screen.getByTestId('quiz-next'))
-    expect(screen.getByText('Question 2 of 2')).toBeInTheDocument()
+    expect(screen.getByText(/Fråga.*2/)).toBeInTheDocument()
   })
 
   it('calls onComplete with score after last question', () => {

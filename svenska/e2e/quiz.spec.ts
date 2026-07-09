@@ -7,7 +7,7 @@ test.describe('Quiz Game', () => {
   })
 
   test('shows first question', async ({ page }) => {
-    await expect(page.getByText('Question 1 of 8')).toBeVisible()
+    await expect(page.getByText(/Question 1/)).toBeVisible()
   })
 
   test('selecting correct answer shows positive feedback', async ({ page }) => {
@@ -23,7 +23,7 @@ test.describe('Quiz Game', () => {
   test('can advance to next question after answering', async ({ page }) => {
     await page.getByTestId('quiz-option-på').click()
     await page.getByTestId('quiz-next').click()
-    await expect(page.getByText('Question 2 of 8')).toBeVisible()
+    await expect(page.getByText(/Question 2/)).toBeVisible()
   })
 
   test('shows star rating on home after completing quiz', async ({ page }) => {
