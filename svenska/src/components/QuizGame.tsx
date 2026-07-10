@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import type { QuizQuestion } from '../data/prepositions'
+import { Confetti } from './Confetti'
+import { playCorrect, playWrong, playComplete } from '../utils/sounds'
 
 interface Props {
   questions: QuizQuestion[]
@@ -14,6 +16,7 @@ export function QuizGame({ questions, onComplete }: Props) {
   const [score, setScore] = useState(0)
   const [showResult, setShowResult] = useState(false)
   const [animKey, setAnimKey] = useState(0)
+  const [confettiActive, setConfettiActive] = useState(false)
 
   const question = questions[current]
   const isCorrect = selected === question?.correctAnswer
@@ -21,19 +24,30 @@ export function QuizGame({ questions, onComplete }: Props) {
 
   const handleAnswer = (option: string) => {
     if (isAnswered) return
+    const correct = option === question.correctAnswer
     setSelected(option)
     setAnimKey((k) => k + 1)
+    if (correct) {
+      playCorrect()
+      setConfettiActive(true)
+      setTimeout(() => setConfettiActive(false), 50)
+      setTimeout(() => setConfettiActive(true), 100)
+    } else {
+      playWrong()
+    }
   }
 
   const handleNext = () => {
     const newScore = isCorrect ? score + 1 : score
     if (current + 1 >= questions.length) {
+      playComplete()
       setShowResult(true)
       onComplete(newScore)
     } else {
       setScore(newScore)
       setCurrent(current + 1)
       setSelected(null)
+      setConfettiActive(false)
     }
   }
 
@@ -155,7 +169,7 @@ export function QuizGame({ questions, onComplete }: Props) {
               key={`${option}-${animKey}`}
               onClick={() => handleAnswer(option)}
               data-testid={`quiz-option-${option}`}
-              className={isAnswered && isThis ? (isCorrect ? 'pop' : 'wiggle') : ''}
+              className={isAnswered && isThis ? (isCorrect ? 'pop' : 'wiggle') : isAnswered && isRight ? 'pop' : ''}
               style={{
                 background: bg, border, borderRadius: 18,
                 padding: '16px 8px', cursor: isAnswered ? 'default' : 'pointer',
@@ -177,15 +191,21 @@ export function QuizGame({ questions, onComplete }: Props) {
       {/* Feedback + Next */}
       {isAnswered && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-          <div style={{
-            background: isCorrect ? '#D1FAE5' : '#FEE2E2',
-            border: `2px solid ${isCorrect ? '#6EE7B7' : '#FECACA'}`,
-            borderRadius: 16, padding: '12px 24px',
-            fontWeight: 800, fontSize: 18,
-            color: isCorrect ? '#065F46' : '#991B1B',
-            textAlign: 'center',
-          }}>
+          <div
+            className={isCorrect ? 'bounce-in' : 'thud'}
+            style={{
+              position: 'relative', overflow: 'visible',
+              background: isCorrect ? '#D1FAE5' : '#FEE2E2',
+              border: `2px solid ${isCorrect ? '#6EE7B7' : '#FECACA'}`,
+              borderRadius: 16, padding: '12px 24px',
+              fontWeight: 800, fontSize: 18,
+              color: isCorrect ? '#065F46' : '#991B1B',
+              textAlign: 'center',
+              boxShadow: isCorrect ? '0 0 0 6px rgba(16,185,129,0.15)' : '0 0 0 4px rgba(239,68,68,0.1)',
+            }}
+          >
             {isCorrect ? '🎉 Perfekt! Excellent!' : `❌ It was "${question.correctAnswer}"`}
+            <Confetti active={confettiActive} />
           </div>
           <button
             onClick={handleNext}

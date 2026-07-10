@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Preposition } from '../data/prepositions'
+import { playFlip } from '../utils/sounds'
 
 interface Props {
   preposition: Preposition
@@ -63,7 +64,7 @@ export function Flashcard({ preposition, exampleSwedish, exampleEnglish, onNext,
       <div
         className="flip-container"
         style={{ width: '100%', height: 280, cursor: 'pointer' }}
-        onClick={() => setFlipped((f) => !f)}
+        onClick={() => { playFlip(); setFlipped((f) => !f) }}
         data-testid="flashcard-card"
         role="button"
         aria-label={flipped ? 'Flip back to Swedish' : 'Tap to see meaning'}

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import type { DragScene } from '../data/prepositions'
+import { Confetti } from './Confetti'
+import { playCorrect, playWrong, playComplete } from '../utils/sounds'
 
 interface Props {
   scenes: DragScene[]
@@ -86,6 +88,7 @@ export function DragDrop({ scenes, onComplete }: Props) {
   const [tapped, setTapped] = useState<string | null>(null)
   const [score, setScore] = useState(0)
   const [done, setDone] = useState(false)
+  const [confettiActive, setConfettiActive] = useState(false)
 
   const scene = scenes[current]
 
@@ -97,12 +100,22 @@ export function DragDrop({ scenes, onComplete }: Props) {
     if (result) return
     setTapped(zoneId)
     const zone = scene.zones.find((z) => z.id === zoneId)
-    setResult(zone?.correct ? 'correct' : 'wrong')
+    const correct = !!zone?.correct
+    setResult(correct ? 'correct' : 'wrong')
+    if (correct) {
+      playCorrect()
+      setConfettiActive(true)
+      setTimeout(() => setConfettiActive(false), 50)
+      setTimeout(() => setConfettiActive(true), 100)
+    } else {
+      playWrong()
+    }
   }
 
   const handleNext = () => {
     const newScore = result === 'correct' ? score + 1 : score
     if (current + 1 >= scenes.length) {
+      playComplete()
       setDone(true)
       onComplete(newScore)
     } else {
@@ -110,6 +123,7 @@ export function DragDrop({ scenes, onComplete }: Props) {
       setCurrent(current + 1)
       setResult(null)
       setTapped(null)
+      setConfettiActive(false)
     }
   }
 
@@ -296,17 +310,23 @@ export function DragDrop({ scenes, onComplete }: Props) {
       {/* Feedback + Next */}
       {result && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-          <div style={{
-            background: result === 'correct' ? '#D1FAE5' : '#FEE2E2',
-            border: `2px solid ${result === 'correct' ? '#6EE7B7' : '#FECACA'}`,
-            borderRadius: 16, padding: '12px 24px',
-            fontWeight: 800, fontSize: 18,
-            color: result === 'correct' ? '#065F46' : '#991B1B',
-            textAlign: 'center',
-          }}>
+          <div
+            className={result === 'correct' ? 'bounce-in' : 'thud'}
+            style={{
+              position: 'relative', overflow: 'visible',
+              background: result === 'correct' ? '#D1FAE5' : '#FEE2E2',
+              border: `2px solid ${result === 'correct' ? '#6EE7B7' : '#FECACA'}`,
+              borderRadius: 16, padding: '12px 24px',
+              fontWeight: 800, fontSize: 18,
+              color: result === 'correct' ? '#065F46' : '#991B1B',
+              textAlign: 'center',
+              boxShadow: result === 'correct' ? '0 0 0 6px rgba(16,185,129,0.15)' : '0 0 0 4px rgba(239,68,68,0.1)',
+            }}
+          >
             {result === 'correct'
               ? '🎉 Perfekt! / Well done!'
               : `❌ "${scene.preposition}" = ${scene.instruction.split(' ').slice(3).join(' ')}`}
+            <Confetti active={confettiActive} />
           </div>
           <button
             onClick={handleNext}
