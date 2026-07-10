@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vercel
+
+# Playwright
+playwright-report
+test-results
+
+# Unused Vite template files
+src/App.css
+src/assets
