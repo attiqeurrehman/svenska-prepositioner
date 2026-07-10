@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Baloo 2', 'Comic Sans MS', cursive, sans-serif;
+  background: #FFF8EE;
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 3D card press effect */
+.card-press {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.card-press:active {
+  transform: translateY(3px) scale(0.98);
+}
+
+/* Flip animation */
+.flip-container {
+  perspective: 1000px;
+}
+.flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+.flip-front,
+.flip-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 28px;
+}
+.flip-back {
+  transform: rotateY(180deg);
+}
+
+/* Pulse animation for correct answer */
+@keyframes pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); }
+  70%  { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+.pop { animation: pop 0.35s ease; }
+
+/* Wiggle for wrong answer */
+@keyframes wiggle {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-6px); }
+  80%       { transform: translateX(6px); }
+}
+.wiggle { animation: wiggle 0.4s ease; }
+
+/* Float bob */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+.float { animation: float 3s ease-in-out infinite; }
+
+/* Stars sparkle */
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50%       { opacity: 0.7; transform: scale(1.3) rotate(20deg); }
+}
+
+/* Drop zone hover pulse */
+@keyframes zone-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(99,102,241,0); }
+}
+.zone-hover { animation: zone-pulse 1.2s ease infinite; }
+
+/* Elastic bounce-in for correct feedback */
+@keyframes bounce-in {
+  0%   { transform: scale(0.4); opacity: 0; }
+  55%  { transform: scale(1.18); opacity: 1; }
+  80%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+.bounce-in { animation: bounce-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* Wrong answer thud */
+@keyframes thud {
+  0%, 100% { transform: scale(1); }
+  30%       { transform: scale(0.92); }
+  60%       { transform: scale(1.04); }
+}
+.thud { animation: thud 0.3s ease both; }
+
+/* Confetti particles */
+@keyframes confetti-up {
+  0%   { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-90px) scale(0.2) rotate(600deg); opacity: 0; }
+}
+.confetti-particle {
+  position: absolute;
+  pointer-events: none;
+  animation: confetti-up 0.75s ease-out forwards;
+}
